@@ -14,7 +14,7 @@ function App() {
   // const clickHandler = () => {
   //   setCount((count) => count + 1)
   // }
-  const [t, setT] = useState('')
+  const [inputValue, setInputValue] = useState('')
   // var count = 0
   // count = count + 1
   const [todoListItems, setTodoItems] = useState([])
@@ -22,35 +22,44 @@ function App() {
   const saveTodoListItem = () => {
     // todoListItems.push(1)
     // todoListItems = todoListItems + t
-    setTodoItems([...todoListItems, t])
+    const newResult = [...todoListItems, { 
+      id: todoListItems.length, 
+      value: inputValue, 
+      isCheck: false
+    }]
+    setTodoItems(newResult)
+    setInputValue('')
+    // console.log('in', newResult)
   }
- 
+  // console.log('out', todoListItems)
+  const checkHandle = (id) => {
+    const newArr = todoListItems.map(item => {
+      if(id !== item.id) return item
+      return {
+        id: item.id,
+        value: item.value,
+        isCheck: !item.isCheck,
+      }
+    })
+    setTodoItems(newArr)
+  }
+ console.log(todoListItems)
   return (
     <>
       <div>
-        {/* <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a> */}
+        {
+          todoListItems.map(item => (
+            <div style={{ display: 'flex' }} key={item.id}>
+              <input type="checkbox" onChange={() => checkHandle(item.id)} />
+              <div style={{ color: item.id === 0 ? 'white': 'red' }} >{item.value}</div>
+            </div>
+          ))
+        }
+        <div className="card">
+          <input type="text" value={inputValue} onChange={(e) => {console.log('change');setInputValue(e.target.value)}} />
+          <button onClick={saveTodoListItem}>save</button>
+        </div>
       </div>
-      {/* <h1>Custom + Vite + React</h1> */}
-      <div className="card">
-        {/* listener */}
-        {/* <button onClick={clickHandler}>
-          count is {count}
-        </button> */}
-        <input type="text" onChange={(e) => {setT(e.target.value)}} />
-        <button onClick={saveTodoListItem}>save</button>
-        {/* <p>
-          t: {t}
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p> */}
-      </div>
-      {/* <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
     </>
   )
 }
